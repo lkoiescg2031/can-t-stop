@@ -1,4 +1,18 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {}
+const withTwin = require("./config/withTwin.js");
 
-module.exports = nextConfig
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        v8: require.resolve("v8"),
+      };
+    }
+
+    return config;
+  },
+};
+
+module.exports = withTwin(nextConfig);
