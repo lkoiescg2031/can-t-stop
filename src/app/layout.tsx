@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import DefaultLayout from "@/components/layouts/default-layout";
-import { PropsWithChildren, ReactElement } from "react";
+import React, { PropsWithChildren, ReactElement } from "react";
 
 export const metadata: Metadata = {
   title: "Can't stop",
