@@ -41,6 +41,14 @@
     "storybook": "^7.6.1",
     "tailwindcss": "^3.3.5",
     "twin.macro": "^3.4.0",
-    "typescript": "^5"
-  }
+    "typescript": "^5.3.2"
+  },
+  "engines": {
+    "npm": "please-use-yarn",
+    "pnpm": "please-use-yarn",
+    "yarn": ">= 4.0.2",
+    "node": "v18.17.0",
+    "vscode": "^1.22.0"
+  },
+  "packageManager": "yarn@4.0.2"
 }
