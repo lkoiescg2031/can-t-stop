@@ -6,13 +6,12 @@ import classNames from "classnames";
 import styled from "styled-components";
 import tw from "twin.macro";
 import { PeakNumberType } from "@/models/spot";
-import { Player } from "@/models/player";
 
 export interface SpotProps {
-  peakNumber?: PeakNumberType;
-  conqueror?: Player;
-  onClimb?: MouseEventHandler;
   className?: string;
+  peakNumber?: PeakNumberType;
+  isClimbable?: boolean;
+  onClick?: MouseEventHandler;
 }
 
 export default function Spot(
@@ -23,18 +22,16 @@ export default function Spot(
       className={classNames(
         "spot",
         {
-          climbable: !!props.onClimb,
+          climbable: props.isClimbable,
+          peak: !!props.peakNumber,
+          "has-child": Children.count(props.children) > 0,
         },
         props.className
       )}
-      onClick={props.onClimb}
+      onClick={props.onClick}
     >
       {props.peakNumber && (
-        <span
-          className={classNames("peak-number", {
-            "has-child": Children.count(props.children) > 0,
-          })}
-        >
+        <span className={classNames("peak-number", {})}>
           {props.peakNumber}
         </span>
       )}
@@ -62,15 +59,6 @@ const StyledSpot = styled.div`
       ${tw`cursor-pointer outline-amber-400 hover:animate-bounce`}
     }
 
-    .peak-number {
-      ${tw`font-bold text-2xl text-white`}
-      ${tw`flex cursor-default`}
-        
-      &.has-child {
-        ${tw`text-base`}
-      }
-    }
-
     .marker-container {
       ${tw`h-10`}
       ${tw`flex relative`}
@@ -95,7 +83,6 @@ const StyledSpot = styled.div`
 
       &.child-count-1 {
         ${tw`min-w-[2.5rem]`}
-
         .marker {
           ${tw`border-none`}
         }
@@ -119,6 +106,45 @@ const StyledSpot = styled.div`
           &:last-of-type {
             ${tw`mr-0`}
           }
+        }
+      }
+    }
+
+    &.peak {
+      .peak-number {
+        ${tw`font-bold text-2xl text-white`}
+        ${tw`flex select-none`}
+      }
+
+      &.has-child {
+        .peak-number {
+          ${tw`text-sm`}
+        }
+
+        ${tw`bg-player-none`}
+
+        &:has(.player-1) {
+          ${tw`bg-player-1`}
+        }
+
+        &:has(.player-2) {
+          ${tw`bg-player-2`}
+        }
+
+        &:has(.player-3) {
+          ${tw`bg-player-3`}
+        }
+
+        &:has(.player-4) {
+          ${tw`bg-player-4`}
+        }
+
+        .pickaxe-icon {
+          ${tw`w-5/6 h-5/6`}
+        }
+
+        .camp-icon {
+          ${tw`w-full h-full`}
         }
       }
     }

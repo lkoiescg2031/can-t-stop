@@ -25,7 +25,7 @@ export const Default: Story = {
 /** 클릭 가능한 상태의 Spot */
 export const ClimbableSpot: Story = {
   args: {
-    onClimb: () => {},
+    isClimbable: true,
   },
 };
 
@@ -122,7 +122,7 @@ export const MaxPeakNumber: Story = {
 export const ClimbablePeak: Story = {
   args: {
     ...MaxPeakNumber.args,
-    onClimb: () => {},
+    ...ClimbableSpot.args,
   },
 };
 
@@ -137,7 +137,7 @@ export const PeakWithPickaxe: Story = {
 /** 어떤 플레이어가 등반한 후 캠프까지 설치했을 때 */
 export const ConqueredPeak: Story = {
   args: {
-    ...PeakSpot.args,
+    ...MaxPeakNumber.args,
     children: <CampMarker player={1} />,
   },
 };
