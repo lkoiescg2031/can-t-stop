@@ -1,63 +1,123 @@
 "use client";
 
-import React, { MouseEventHandler, PropsWithChildren } from "react";
+import React, { Children, MouseEventHandler, PropsWithChildren } from "react";
 
 import classNames from "classnames";
 import styled from "styled-components";
 import tw from "twin.macro";
-import Camp from "../camp";
-import Pickaxe from "../pickaxe";
+import { PeakNumberType } from "@/models/spot";
+import { Player } from "@/models/player";
 
-type TrailNumberType = 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-
-interface StyledSpotContainerProps {
-  isClickable?: boolean;
-  onClick?: MouseEventHandler;
-}
-
-export interface SpotProps extends StyledSpotContainerProps {
-  trailNumber?: TrailNumberType;
+export interface SpotProps {
+  peakNumber?: PeakNumberType;
+  conqueror?: Player;
+  onClimb?: MouseEventHandler;
   className?: string;
 }
 
-/**
- * 베이스캠프
- */
 export default function Spot(
   props: PropsWithChildren<SpotProps>
 ): React.ReactElement {
   return (
-    <StyledSpotContainer
-      className={classNames("spot-container", props.className)}
-      isClickable={props.isClickable}
-      onClick={props.onClick}
+    <StyledSpot
+      className={classNames(
+        "spot",
+        {
+          climbable: !!props.onClimb,
+        },
+        props.className
+      )}
+      onClick={props.onClimb}
     >
-      <div
-        className={classNames("spot", {
-          clickable: props.isClickable || props.onClick,
-        })}
-      >
-        {props.children}
-        {props.trailNumber && (
-          <span className={classNames("spot-number")}>{props.trailNumber}</span>
-        )}
-      </div>
-    </StyledSpotContainer>
+      {props.peakNumber && (
+        <span
+          className={classNames("peak-number", {
+            "has-child": Children.count(props.children) > 0,
+          })}
+        >
+          {props.peakNumber}
+        </span>
+      )}
+      {Children.count(props.children) > 0 && (
+        <div
+          className={classNames(
+            "marker-container",
+            `child-count-${Children.count(props.children)}`
+          )}
+        >
+          {props.children}
+        </div>
+      )}
+    </StyledSpot>
   );
 }
 
 //FIXME 맥 환경에서 클릭시 커서 생기는 이슈 있음
-const StyledSpotContainer = styled.div<StyledSpotContainerProps>`
-  &.spot-container {
-    .spot {
-      ${tw`w-14 h-14 rounded-full flex flex-row justify-center items-center bg-slate-100 `}
+const StyledSpot = styled.div`
+  &.spot {
+    ${tw`w-16 h-16 rounded-full bg-spot outline-none`}
+    ${tw`flex flex-col justify-center items-center`}
 
-      &.clickable {
-        ${tw`cursor-pointer outline hover:outline-amber-400`}
+    &.climbable {
+      ${tw`cursor-pointer hover:outline-amber-400`}
+    }
+
+    .peak-number {
+      ${tw`font-bold text-2xl text-white`}
+      ${tw`flex cursor-default`}
+        
+      &.has-child {
+        ${tw`text-base`}
+      }
+    }
+
+    .marker-container {
+      ${tw`h-10`}
+      ${tw`flex relative`}
+
+      .marker {
+        ${tw`border-2 border-solid border-spot`}
+        ${tw`absolute`}
+
+        &:nth-of-type(1) {
+          ${tw`z-[40] left-0`}
+        }
+        &:nth-of-type(2) {
+          ${tw`z-[30] left-2`}
+        }
+        &:nth-of-type(3) {
+          ${tw`z-[20] left-4`}
+        }
+        &:nth-of-type(4) {
+          ${tw`z-[10] left-6`}
+        }
       }
 
-      .spot-number {
-        ${tw`flex font-bold text-2xl text-slate-700 cursor-default`}
+      &.child-count-1 {
+        ${tw`min-w-[2.5rem]`}
+
+        .marker {
+          ${tw`border-none`}
+        }
+      }
+      &.child-count-2 {
+        ${tw`min-w-[3rem]`}
+      }
+      &.child-count-3 {
+        ${tw`min-w-[3.5rem]`}
+      }
+      &.child-count-4 {
+        ${tw`min-w-[4rem]`}
+      }
+
+      &:hover {
+        .marker {
+          ${tw`static border-none mr-1`}
+
+          &:last-of-type {
+            ${tw`mr-0`}
+          }
+        }
       }
     }
   }

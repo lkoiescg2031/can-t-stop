@@ -1,14 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import Camp from "./index";
+import CampIcon from "@/components/atoms/icon/camp-icon";
 
+/** 캠프 아이콘 */
 const meta = {
-  title: "ATOMS/Camp",
-  component: Camp,
+  title: "ATOMS/Icon/CampIcon",
+  component: CampIcon,
   argTypes: {},
   parameters: {},
   tags: ["autodocs"],
-} satisfies Meta<typeof Camp>;
+} satisfies Meta<typeof CampIcon>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
