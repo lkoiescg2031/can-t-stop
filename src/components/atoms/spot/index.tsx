@@ -55,11 +55,11 @@ export default function Spot(
 //FIXME 맥 환경에서 클릭시 커서 생기는 이슈 있음
 const StyledSpot = styled.div`
   &.spot {
-    ${tw`w-16 h-16 rounded-full bg-spot outline-none`}
+    ${tw`w-16 h-16 rounded-full bg-spot border-none outline-none`}
     ${tw`flex flex-col justify-center items-center`}
 
     &.climbable {
-      ${tw`cursor-pointer hover:outline-amber-400`}
+      ${tw`cursor-pointer outline-amber-400 hover:animate-bounce`}
     }
 
     .peak-number {
@@ -109,8 +109,10 @@ const StyledSpot = styled.div`
       &.child-count-4 {
         ${tw`min-w-[4rem]`}
       }
+    }
 
-      &:hover {
+    &:hover {
+      .marker-container {
         .marker {
           ${tw`static border-none mr-1`}
 
