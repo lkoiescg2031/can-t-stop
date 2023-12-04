@@ -15,7 +15,8 @@
     "next": "14.0.3",
     "react": "^18",
     "react-dom": "^18",
-    "styled-components": "^6.1.1"
+    "styled-components": "^6.1.1",
+    "zustand": "^4.4.7"
   },
   "devDependencies": {
     "@babel/plugin-syntax-typescript": "^7.23.3",

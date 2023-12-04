@@ -5,13 +5,12 @@ import React, { PropsWithChildren } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import tw from "twin.macro";
-import { Player } from "@/models/player";
 import Marker from "@/components/atoms/marker";
 import CampIcon from "@/components/atoms/icon/camp-icon";
 
 export interface CampMarkerProps {
   className?: string;
-  player: Player;
+  player: number;
 }
 
 /**
