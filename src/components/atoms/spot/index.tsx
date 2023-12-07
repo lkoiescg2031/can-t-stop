@@ -5,11 +5,10 @@ import React, { Children, MouseEventHandler, PropsWithChildren } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import tw from "twin.macro";
-import { PeakNumberType } from "@/models/spot";
 
 export interface SpotProps {
   className?: string;
-  peakNumber?: PeakNumberType;
+  peakNumber?: number;
   isClimbable?: boolean;
   onClick?: MouseEventHandler;
 }

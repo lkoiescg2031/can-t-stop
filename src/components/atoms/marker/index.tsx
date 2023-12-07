@@ -1,6 +1,5 @@
 "use client";
 
-import { Player } from "@/models/player";
 import classNames from "classnames";
 import React, { ReactNode } from "react";
 import styled from "styled-components";
@@ -8,7 +7,7 @@ import tw from "twin.macro";
 
 export interface MarkerProps {
   className?: string;
-  player?: Player;
+  player?: number;
   children?: ReactNode;
 }
 
