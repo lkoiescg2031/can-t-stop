@@ -6,7 +6,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 import tw from "twin.macro";
 import Marker from "@/components/atoms/marker";
-import CampIcon from "@/components/atoms/icon/camp-icon";
+import CampIcon from "@/components/atoms/icons/camp-icon";
 
 export interface CampMarkerProps {
   className?: string;

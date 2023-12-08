@@ -1,15 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import PickaxeMarker from "@/components/molecules/marker/pickaxe-marker";
+import CampIcon from "@/components/atoms/icons/camp-icon";
 
-/** 곡갱이 마커 */
+/** 캠프 아이콘 */
 const meta = {
-  title: "MOLECULES/Marker/PickaxeMarker",
-  component: PickaxeMarker,
+  title: "ATOMS/Icons/CampIcon",
+  component: CampIcon,
   argTypes: {},
   parameters: {},
   tags: ["autodocs"],
-} satisfies Meta<typeof PickaxeMarker>;
+} satisfies Meta<typeof CampIcon>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

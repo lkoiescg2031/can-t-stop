@@ -1,12 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import Spot from "@/components/atoms/spot";
-import PickaxeMarker from "@/components/molecules/marker/pickaxe-marker";
-import CampMarker from "@/components/molecules/marker/camp-marker";
+import Spot from "@/components/molecules/spot";
+import PickaxeMarker from "@/components/molecules/markers/pickaxe-marker";
+import CampMarker from "@/components/molecules/markers/camp-marker";
 
 /** 게임 판에 말이 이동할 수 있는 지점을 표시하는 컴포넌트 */
 const meta = {
-  title: "ATOMS/Spot",
+  title: "MOLECULES/Spot",
   component: Spot,
   argTypes: {},
   parameters: {},
