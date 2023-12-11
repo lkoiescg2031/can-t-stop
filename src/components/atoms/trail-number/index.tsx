@@ -1,3 +1,5 @@
+"use client";
+
 import classNames from "classnames";
 import React, { ReactElement } from "react";
 import styled from "styled-components";
