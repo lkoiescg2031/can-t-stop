@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import PickaxeIcon from "@/components/atoms/icon/pickaxe-icon";
+import PickaxeIcon from "@/components/atoms/icons/pickaxe-icon";
 
 /** 곡갱이 아이콘 */
 const meta = {
-  title: "ATOMS/Icon/PickaxeIcon",
+  title: "ATOMS/Icons/PickaxeIcon",
   component: PickaxeIcon,
   tags: ["autodocs"],
 } satisfies Meta<typeof PickaxeIcon>;
