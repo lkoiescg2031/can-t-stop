@@ -26,7 +26,14 @@ export default function Dice(props: DiceProps): React.ReactElement {
 
     //XXX how to make unit test in this case. we need to consider this case
     const intervalId = setInterval(() => {
-      setSelectedPip(Math.floor(Math.random() * 6 + 1));
+      if(selectedPip === undefined) setSelectedPip(1);
+      let newPip: number;
+      do{
+        newPip = Math.floor(Math.random() * 6 + 1);
+        console.log(`sP:${selectedPip} nP:${newPip}`)
+      }
+      while(selectedPip != newPip)
+      setSelectedPip(newPip);
     }, 250);
 
     return () => {
