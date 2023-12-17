@@ -14,7 +14,7 @@ export interface TrailNumberProps {
 export default function TrailNumber(
   props: TrailNumberProps
 ): ReactElement | null {
-  if (!props.children) {
+  if (typeof props.children !== "number") {
     return null;
   }
 
