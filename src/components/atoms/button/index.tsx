@@ -1,6 +1,10 @@
 "use client";
 
-import React, { PropsWithChildren, ReactElement } from "react";
+import React, {
+  MouseEventHandler,
+  PropsWithChildren,
+  ReactElement,
+} from "react";
 import styled from "styled-components";
 import tw from "twin.macro";
 import classNames from "classnames";
@@ -10,6 +14,7 @@ import WoodTexture from "@/assets/images/wood-texture.jpg";
 export interface ButtonProps {
   className?: string;
   disabled?: boolean;
+  onClick?: MouseEventHandler;
 }
 
 export default function Button(
@@ -17,7 +22,10 @@ export default function Button(
 ): ReactElement {
   return (
     <StyledButton
-      className={classNames("button", props.className)}
+      type="button"
+      //FIXME text-shadow 는 왜 tw 통해서 주입되지 않는 지 확인
+      className={classNames("button", "text-shadow", props.className)}
+      onClick={props.onClick}
       disabled={props.disabled}
     >
       {props.children}
@@ -35,7 +43,6 @@ const StyledButton = styled.button`
 
     // button text shape
     ${tw`text-2xl font-black text-yellow-950 align-middle`}
-    text-shadow: 2px 2px 3px rgba(255,255,255,0.5);
 
     &:disabled {
       ${tw`opacity-50 cursor-not-allowed`}
