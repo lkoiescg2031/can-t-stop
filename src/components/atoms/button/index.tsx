@@ -41,5 +41,9 @@ const StyledButton = styled.button`
       ${tw`opacity-50 cursor-not-allowed`}
       filter: brightness(80%);
     }
+
+    &:active {
+      ${tw`shadow-inner-bold translate-y-2`}
+    }
   }
 `;
