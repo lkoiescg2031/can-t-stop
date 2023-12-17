@@ -7,5 +7,5 @@ export interface BoardLayoutProps {
 export default function BoardLayout(
   props: PropsWithChildren<BoardLayoutProps>
 ): ReactElement {
-  return <div>{props.children}</div>;
+  return <>{props.children}</>;
 }
