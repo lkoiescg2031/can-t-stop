@@ -9,9 +9,6 @@ const meta = {
   component: TrailNumber,
   argTypes: {},
   parameters: {},
-  decorators: [
-    (Story): ReactElement => <div className="bg-spot p-4">{Story()}</div>,
-  ],
   tags: ["autodocs"],
 } satisfies Meta<typeof TrailNumber>;
 
@@ -22,6 +19,7 @@ type Story = StoryObj<typeof meta>;
 /** TrailNumber의 가장 기본적인 형태 */
 export const Default: Story = {
   args: {
+    variant: undefined,
     children: 8,
   },
 };
@@ -38,6 +36,17 @@ export const MaxPeakNumber: Story = {
   args: {
     children: 12,
   },
+};
+
+/** TrailNumber 흰색 타입 */
+export const VariantWhite: Story = {
+  args: {
+    ...Default.args,
+    variant: "white",
+  },
+  decorators: [
+    (Story): ReactElement => <div className="bg-spot p-4">{Story()}</div>,
+  ],
 };
 
 /** TrailNumber가 없을 때 */
