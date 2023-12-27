@@ -1,4 +1,4 @@
-import BoardLayout from "@/components/layouts/board-layout";
+import BoardLayout from "@/components/templates/board-layout";
 import React, { PropsWithChildren, ReactElement } from "react";
 
 export interface GameLayoutProps {
