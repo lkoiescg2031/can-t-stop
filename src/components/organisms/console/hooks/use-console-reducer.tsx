@@ -1,4 +1,4 @@
-import { Dispatch, useReducer } from "react";
+import { Dispatch, Reducer, useReducer } from "react";
 
 interface InitAction {
   type: "INIT";
@@ -31,7 +31,7 @@ type ConsoleAction =
 
 interface ConsoleInitState {
   state: "init";
-  dice: [undefined, undefined, undefined, undefined];
+  dice: undefined[];
 }
 
 interface ConsoleSelectState {
@@ -42,7 +42,7 @@ interface ConsoleSelectState {
 
 interface ConsoleContinueState {
   state: "continue";
-  dice: [undefined, undefined, undefined, undefined];
+  dice: undefined[];
 }
 
 export type ConsoleState =
@@ -55,10 +55,11 @@ const INIT_STATE: ConsoleInitState = {
   dice: [undefined, undefined, undefined, undefined],
 };
 
-export type ConsoleChangeHandler = (
-  newState: ConsoleState,
-  prevState: ConsoleState
-) => void;
+export type ConsoleChangeHandler = (event: {
+  newState: ConsoleState;
+  prevState: ConsoleState;
+  action: ConsoleAction;
+}) => void;
 
 function consoleReducer(
   onStateChanged?: ConsoleChangeHandler
@@ -111,7 +112,7 @@ function consoleReducer(
     })();
 
     if (onStateChanged) {
-      onStateChanged(newState, prevState);
+      onStateChanged({ newState, prevState, action });
     }
 
     return newState;
@@ -126,10 +127,9 @@ interface useConsoleReducerParam {
 export default function useConsoleReducer(
   params?: useConsoleReducerParam
 ): [ConsoleState, Dispatch<ConsoleAction>] {
-  const [consoleState, dispatch] = useReducer(
-    consoleReducer(params?.onStateChanged),
-    params?.defaultState || INIT_STATE
-  );
+  const [consoleState, dispatch] = useReducer<
+    Reducer<ConsoleState, ConsoleAction>
+  >(consoleReducer(params?.onStateChanged), params?.defaultState || INIT_STATE);
 
   return [consoleState, dispatch];
 }

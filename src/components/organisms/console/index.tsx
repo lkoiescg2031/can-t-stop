@@ -16,19 +16,17 @@ import useConsoleReducer, {
 export interface ConsoleProps {
   className?: string;
   defaultState?: ConsoleState;
-  onConsoleUpdate?: ConsoleChangeHandler;
+  onConsoleUpdated?: ConsoleChangeHandler;
 }
 
 export default function Console(props: ConsoleProps): React.ReactElement {
   const [console, dispatch] = useConsoleReducer({
     defaultState: props.defaultState,
-    onStateChanged: props.onConsoleUpdate,
+    onStateChanged: props.onConsoleUpdated,
   });
 
   return (
-    <StyledConsoleLayoutDiv
-      className={classNames("console-layout", props.className)}
-    >
+    <StyledConsoleDiv className={classNames("console", props.className)}>
       <div className={classNames("dice-console-area")}>
         {console.state !== "select" &&
           console.dice.map((diceNumber, index) => (
@@ -88,17 +86,18 @@ export default function Console(props: ConsoleProps): React.ReactElement {
           <Button onClick={() => dispatch({ type: "CAMPING" })}>Camping</Button>
         )}
       </div>
-    </StyledConsoleLayoutDiv>
+    </StyledConsoleDiv>
   );
 }
 
-const StyledConsoleLayoutDiv = styled.div`
-  &.console-layout {
+const StyledConsoleDiv = styled.div`
+  &.console {
     ${tw`flex flex-col justify-around`}
-    ${tw`absolute bottom-0 right-0`}
     ${tw`w-[280.47px] h-[160px] m-4`}
+
     .dice-console-area {
       ${tw`w-full flex justify-around`}
+      
       .trail-view {
         ${tw`min-w-[30px] flex flex-col justify-around items-center`}
       }

@@ -5,5 +5,5 @@ export interface IPos {
   /** trail 번호 (0 번 부터 시작) */
   trail: number;
   /** trail 상에서의 위치 */
-  hight: number;
+  height: number;
 }

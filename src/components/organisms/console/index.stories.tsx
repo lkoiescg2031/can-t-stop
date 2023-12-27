@@ -6,9 +6,6 @@ import Console from "@/components/organisms/console";
 const meta = {
   title: "ORGANISMS/Console",
   component: Console,
-  decorators: [
-    (Story) => <div className="relative w-[300px] h-[200px]">{Story()}</div>,
-  ],
   tags: ["autodocs"],
 } satisfies Meta<typeof Console>;
 
@@ -18,11 +15,16 @@ type Story = StoryObj<typeof meta>;
 
 /** 초기 상태 */
 export const InitialState: Story = {
-  args: {},
+  args: {
+    className: undefined,
+    onConsoleUpdated: undefined,
+    defaultState: undefined,
+  },
 };
 
 export const SelectState: Story = {
   args: {
+    ...InitialState.args,
     defaultState: {
       state: "select",
       dice: [4, 5, 6, 2],
@@ -33,6 +35,7 @@ export const SelectState: Story = {
 
 export const ContinueState: Story = {
   args: {
+    ...InitialState.args,
     defaultState: {
       state: "continue",
       dice: [undefined, undefined, undefined, undefined],

@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import PickaxeMarker from "@/components/molecules/markers/pickaxe-marker";
+import PickaxeMarker from "@/components/molecules/pickaxe-marker";
 
 /** 곡갱이 마커 */
 const meta = {
-  title: "MOLECULES/Markers/PickaxeMarker",
+  title: "MOLECULES/PickaxeMarker",
   component: PickaxeMarker,
   argTypes: {},
   parameters: {},
