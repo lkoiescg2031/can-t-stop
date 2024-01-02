@@ -3,8 +3,8 @@ import React, { PropsWithChildren } from "react";
 import type { BoardType } from "@/models/board";
 
 import Spot from "@/components/molecules/spot";
-import CampMarker from "@/components/molecules/markers/camp-marker";
-import PickaxeMarker from "@/components/molecules/markers/pickaxe-marker";
+import CampMarker from "@/components/molecules/camp-marker";
+import PickaxeMarker from "@/components/molecules/pickaxe-marker";
 import Trail from "@/components/atoms/trail";
 import UIBoard from "@/components/atoms/ui-board";
 

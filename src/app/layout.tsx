@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import DefaultLayout from "@/components/layouts/default-layout";
+import DefaultLayout from "@/components/templates/default-layout";
 import React, { PropsWithChildren, ReactElement } from "react";
 
 export const metadata: Metadata = {

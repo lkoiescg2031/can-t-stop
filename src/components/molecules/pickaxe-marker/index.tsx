@@ -6,7 +6,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 import tw from "twin.macro";
 import Marker from "@/components/atoms/marker";
-import PickaxeIcon from "@/components/atoms/icons/pickaxe-icon";
+import PickaxeIcon from "@/components/atoms/pickaxe-icon";
 
 export interface PickaxeMarkerProps {
   className?: string;

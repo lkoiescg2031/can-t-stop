@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import CampIcon from "@/components/atoms/icons/camp-icon";
+import CampIcon from "@/components/atoms/camp-icon";
 
 /** 캠프 아이콘 */
 const meta = {
-  title: "ATOMS/Icons/CampIcon",
+  title: "ATOMS/CampIcon",
   component: CampIcon,
   argTypes: {},
   parameters: {},

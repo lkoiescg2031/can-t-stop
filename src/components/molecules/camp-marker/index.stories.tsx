@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react";
 
-import CampMarker from "@/components/molecules/markers/camp-marker";
+import CampMarker from "@/components/molecules/camp-marker";
 
 /** 베이스 캠프 */
 const meta = {
-  title: "MOLECULES/Markers/CampMarker",
+  title: "MOLECULES/CampMarker",
   component: CampMarker,
   argTypes: {},
   parameters: {},

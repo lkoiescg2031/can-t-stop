@@ -33,7 +33,7 @@ export default function Spot(
       )}
       onClick={props.onClick}
     >
-      <TrailNumber className={classNames("peak-number")}>
+      <TrailNumber variant="white" className={classNames("peak-number")}>
         {props.peakNumber}
       </TrailNumber>
       {hasChild && (
