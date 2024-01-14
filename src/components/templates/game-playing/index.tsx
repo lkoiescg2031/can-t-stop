@@ -6,6 +6,8 @@ import classNames from "classnames";
 import styled from "styled-components";
 import tw from "twin.macro";
 
+import GameDevTool from "@/components/atoms/game-dev-tool";
+
 import useGameReducer from "@/components/templates/game-playing/hooks/use-game-reducer";
 
 import Board from "@/components/organisms/board";
@@ -67,17 +69,22 @@ export default function GamePlaying(
   );
 
   return (
-    <StyledGamePlayDiv className={classNames("game-playing", props.className)}>
-      <div className={classNames("game-view")}>
-        <Board board={game.board} />
-      </div>
-      <div className={classNames("console-area")}>
-        <Console onConsoleUpdated={handleConsoleUpdate} />
-      </div>
-      <div className={classNames("info-area")}>
-        <InfoBox turn={game.turn} scores={game.scores}></InfoBox>
-      </div>
-    </StyledGamePlayDiv>
+    <>
+      <StyledGamePlayDiv
+        className={classNames("game-playing", props.className)}
+      >
+        <div className={classNames("game-view")}>
+          <Board board={game.board} />
+        </div>
+        <div className={classNames("console-area")}>
+          <Console onConsoleUpdated={handleConsoleUpdate} />
+        </div>
+        <div className={classNames("info-area")}>
+          <InfoBox turn={game.turn} scores={game.scores}></InfoBox>
+        </div>
+      </StyledGamePlayDiv>
+      {process.env.NODE_ENV === "development" && <GameDevTool game={game} />}
+    </>
   );
 }
 

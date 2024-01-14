@@ -17,6 +17,9 @@ export const TOTAL_PLAYER = 4;
 /** 정복해야하는 trail 수 */
 export const GOAL_CONQUER_TRAIL = 3;
 
+/** dice group 수 */
+export const DIC_GROUP_SIZE = 2;
+
 export interface IGame {
   /** 현재 진행중인 플레이어의 차례 (0 : 게임 시작 전, 음수 값 : 해당 플레이어의 승리로 게임 종료) */
   turn: number;
@@ -85,5 +88,16 @@ export function isInvalidBoard(params: AssertBoardParam): boolean {
     ).length > MAX_CAMP;
 
   // 3개 중 하나라도 만족하지 않으면 실패
-  return isOverflowPickaxes || isAllPickaxeSame || isOverflowPickaxes;
+  return isOverflowPickaxes || isAllPickaxeSame || isOverflowTrails;
+}
+
+interface ClimbFixableParam {
+  newPickaxes: AllPickaxesType;
+}
+
+export function checkClimbFixable(params: ClimbFixableParam): boolean {
+  return (
+    params.newPickaxes.length > MAX_PICKAXES &&
+    params.newPickaxes.length < MAX_PICKAXES + DIC_GROUP_SIZE
+  );
 }

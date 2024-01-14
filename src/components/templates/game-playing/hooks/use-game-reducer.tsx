@@ -13,6 +13,7 @@ import {
   GOAL_CONQUER_TRAIL,
   IGame,
   getNextTurn,
+  checkClimbFixable,
   isInvalidBoard,
 } from "@/models/game";
 import { AllPickaxesType, MAX_PICKAXES } from "@/models/pickaxe";
@@ -96,7 +97,7 @@ function reducer(prevState: IGame, action: GameAction): IGame {
        * @param pickaxeMoveResults trailNumber에 pickaxe 가 어떻게 움직였는지 정보를 저장
        * @param newBoard pickaxe의 동작이 포함
        */
-      const pickaxeMoveResults = selectedTrailNumbers.map((trailNumber) => {
+      const allPickaxeMoveResults = selectedTrailNumbers.map((trailNumber) => {
         const prevPickaxePos = findMarker(newBoard, trailNumber, "pickaxe");
 
         // trail에 이미 pickaxe 가 있는 경우
@@ -131,7 +132,7 @@ function reducer(prevState: IGame, action: GameAction): IGame {
 
           let nextHeight = 0;
 
-          // 이전에 켐핑한적이 있다면 다음 위치는 camp 다음 지점으로 변경
+          // 이전에 캠핑한적이 있다면 다음 위치는 camp 다음 지점으로 변경
           const campPos = findMarker(newBoard, trailNumber, currentPlayer);
 
           if (campPos) {
@@ -174,34 +175,59 @@ function reducer(prevState: IGame, action: GameAction): IGame {
         });
       });
 
-      // pickaxe 보정가능한지 확인하는 단계
-      const isNewPickaxeOverflowed = newPickaxes.length > MAX_PICKAXES;
+      // pickaxe 보정 가능한 지 확인하는 단계
+      const isClimbFixable = checkClimbFixable({ newPickaxes });
 
       // case 1: 새로 pickaxe를 배치할 수 있지만 사용자가 골라야하는 경우
-      if (isNewPickaxeOverflowed && prevPickaxes.length < MAX_PICKAXES) {
+      if (isClimbFixable && prevPickaxes.length < MAX_PICKAXES) {
         const selectPickaxeCount = newPickaxes.length - prevPickaxes.length;
-
         //FIXME trail을 선택해야하는 단계인 지 확인 및 맞는 action 추가 (2)
-
         return prevState;
       }
-      // case 2: 이전에 선택한 trailNumber가 3개 인 경우
-      else if (isNewPickaxeOverflowed && prevPickaxes.length === MAX_PICKAXES) {
-        const removeTrailIndex = pickaxeMoveResults.findIndex(
-          (result) => result === "new"
-        );
+      // case 2: 이전에 선택한 trailNumber가 3개이고 겹치는 pickaxe가 있는 경우
+      else if (isClimbFixable && prevPickaxes.length === MAX_PICKAXES) {
+        let pickaxeMoveResults = allPickaxeMoveResults;
 
-        const removeTrail = selectedTrailNumbers[removeTrailIndex];
+        while (true) {
+          const removeSelectedTrailIndex = pickaxeMoveResults.findIndex(
+            (result) => result === "new"
+          );
 
-        newBoard = removeMarker(
-          newBoard,
-          {
-            trail: removeTrail,
-            height: 0,
-          },
-          "pickaxe"
-        );
-        // FIXME newPickaxes 도 다시 계산 (1)
+          if (removeSelectedTrailIndex == -1) {
+            break;
+          }
+
+          const removeTrail = selectedTrailNumbers[removeSelectedTrailIndex];
+          const removePickaxes = findMarker(newBoard, removeTrail, "pickaxe");
+
+          // board 값 보정
+          if (!removePickaxes) {
+            console.error(
+              "pickaxe를 보정 하는 과정에서 newBoard 의 pickaxePos 를 찾을 수 없습니다."
+            );
+            return prevState;
+          }
+
+          newBoard = removeMarker(newBoard, removePickaxes, "pickaxe");
+
+          // newPickaxes 보정
+          const allPickaxes = Array.from(newPickaxes);
+          const failPickaxeIndex = allPickaxes.findIndex(
+            ({ trail }) => trail == removeTrail
+          );
+
+          if (failPickaxeIndex === -1) {
+            console.error(
+              "pickaxe를 보정 하는 과정에서 newPickaxeIndex 의 pickaxePos 를 찾을 수 없습니다."
+            );
+            return prevState;
+          }
+
+          allPickaxes.splice(failPickaxeIndex, 1);
+          newPickaxes = [...allPickaxes];
+
+          pickaxeMoveResults.splice(removeSelectedTrailIndex, 1);
+        }
       }
 
       // board 검증 단계
@@ -248,7 +274,7 @@ function reducer(prevState: IGame, action: GameAction): IGame {
       // 새 board 를 만듬
       prevState.pickaxes.forEach((prevPickaxePos) => {
         newBoard = removeMarker(newBoard, prevPickaxePos, "pickaxe");
-        
+
         const trailNumber = prevPickaxePos.trail;
         const prevCampPos = findMarker(newBoard, trailNumber, currentPlayer);
         if (prevCampPos) {
