@@ -97,7 +97,7 @@ const StyledConsoleDiv = styled.div`
 
     .dice-console-area {
       ${tw`w-full flex justify-around`}
-      
+
       .trail-view {
         ${tw`min-w-[30px] flex flex-col justify-around items-center`}
       }

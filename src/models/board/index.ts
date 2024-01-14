@@ -1,5 +1,7 @@
 import { MarkerType } from "@/models/marker";
 import { IPos } from "@/models/pos";
+import { AllPickaxesType } from "@/models/pickaxe";
+import { AllCamps } from "@/models/camp";
 
 /** 맵 전체의 정보, board[trailNumber][high] : 해당 지점에 설치되어있는 기물의 목록 */
 export type BoardType = Record<number, MarkerType[][]>;
@@ -68,7 +70,9 @@ export function appendMarker(
 ): BoardType {
   const newBoard = createBoard(board);
 
-  newBoard[pos.trail][pos.height].push(marker);
+  let newSpot = newBoard[pos.trail][pos.height];
+  newSpot = [...newSpot, marker];
+  newBoard[pos.trail][pos.height] = newSpot;
 
   return newBoard;
 }

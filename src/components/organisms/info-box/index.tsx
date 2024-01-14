@@ -9,7 +9,7 @@ import tw from "twin.macro";
 export interface InfoBoxProps {
   className?: string;
   turn?: number;
-  scores?: Record<number, number>;
+  scores?: Record<number, number[]>;
 }
 
 export default function InfoBox(
@@ -30,7 +30,7 @@ export default function InfoBox(
               key={`score-${index}`}
               player={parseInt(player, 10)}
             >
-              {score}
+              {score.length}
             </Marker>
           ))}
         </div>
