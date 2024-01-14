@@ -64,7 +64,7 @@ interface AssertBoardParam {
 
 export function isInvalidBoard(params: AssertBoardParam): boolean {
   // - rule1. 새로 배치한 pickaxe의 개수는 전체 pickaxe를 넘을 수 없다.
-  const isOverflowPickaxes = params.newPickaxes.length > MAX_PICKAXES + 1;
+  const isOverflowPickaxes = params.newPickaxes.length > MAX_PICKAXES;
 
   // - rule2. pickaxe가 적어도 하나 이상 이동되었어야 한다.
   const isAllPickaxeSame =

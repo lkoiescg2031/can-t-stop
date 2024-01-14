@@ -46,7 +46,7 @@ const INIT_PICKAXES: AllPickaxesType = [];
 const INIT_CAMPS: CampDictionType = { 1: [], 2: [], 3: [], 4: [] };
 const INIT_STATE: IGame = {
   // 주 관심사
-  // TODO 지금 플레이 상태를 표기하는 값 하나 필요 playState ???
+  // TODO 지금 플레이 상태를 표기하는 값 하나 필요 playState ??? (2)
   turn: 1,
   dices: INIT_DICE,
   board: INIT_BOARD,
@@ -174,16 +174,19 @@ function reducer(prevState: IGame, action: GameAction): IGame {
         });
       });
 
-      // board 보정 단계
-      const isTrailSelectable = newPickaxes.length === MAX_PICKAXES + 1;
+      // pickaxe 보정가능한지 확인하는 단계
+      const isNewPickaxeOverflowed = newPickaxes.length > MAX_PICKAXES;
 
-      // case 1: 이전에 선택한 trailNumber가 2개 인 경우
-      if (isTrailSelectable && prevPickaxes.length === 2) {
-        //FIXME trail을 선택해야하는 단계인 지 확인 및 맞는 action 추가
+      // case 1: 새로 pickaxe를 배치할 수 있지만 사용자가 골라야하는 경우
+      if (isNewPickaxeOverflowed && prevPickaxes.length < MAX_PICKAXES) {
+        const selectPickaxeCount = newPickaxes.length - prevPickaxes.length;
+
+        //FIXME trail을 선택해야하는 단계인 지 확인 및 맞는 action 추가 (2)
+
         return prevState;
       }
       // case 2: 이전에 선택한 trailNumber가 3개 인 경우
-      else if (isTrailSelectable && prevPickaxes.length === 3) {
+      else if (isNewPickaxeOverflowed && prevPickaxes.length === MAX_PICKAXES) {
         const removeTrailIndex = pickaxeMoveResults.findIndex(
           (result) => result === "new"
         );
@@ -198,6 +201,7 @@ function reducer(prevState: IGame, action: GameAction): IGame {
           },
           "pickaxe"
         );
+        // FIXME newPickaxes 도 다시 계산 (1)
       }
 
       // board 검증 단계
@@ -244,6 +248,13 @@ function reducer(prevState: IGame, action: GameAction): IGame {
       // 새 board 를 만듬
       prevState.pickaxes.forEach((prevPickaxePos) => {
         newBoard = removeMarker(newBoard, prevPickaxePos, "pickaxe");
+        
+        const trailNumber = prevPickaxePos.trail;
+        const prevCampPos = findMarker(newBoard, trailNumber, currentPlayer);
+        if (prevCampPos) {
+          newBoard = removeMarker(newBoard, prevCampPos, currentPlayer);
+        }
+
         newBoard = appendMarker(newBoard, prevPickaxePos, currentPlayer);
       });
 
