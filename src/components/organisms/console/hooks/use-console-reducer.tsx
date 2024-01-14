@@ -1,4 +1,4 @@
-import { Dispatch, Reducer, useReducer } from "react";
+import { Dispatch, Reducer, useEffect, useReducer } from "react";
 
 interface InitAction {
   type: "INIT";
@@ -55,6 +55,17 @@ const INIT_STATE: ConsoleInitState = {
   dice: [undefined, undefined, undefined, undefined],
 };
 
+type __ConsoleAction =
+  | ConsoleAction
+  | {
+      type: "___CHANGE_EVENT_HANDLER";
+      newHandler?: ConsoleChangeHandler;
+    };
+
+type __ConsoleState = ConsoleState & {
+  onStateChanged?: ConsoleChangeHandler;
+};
+
 export type ConsoleChangeHandler = (event: {
   newState: ConsoleState;
   prevState: ConsoleState;
@@ -62,60 +73,73 @@ export type ConsoleChangeHandler = (event: {
 }) => void;
 
 function consoleReducer(
-  onStateChanged?: ConsoleChangeHandler
-): (prevState: ConsoleState, action: ConsoleAction) => ConsoleState {
-  return (prevState: ConsoleState, action: ConsoleAction): ConsoleState => {
-    const newState: ConsoleState = ((): ConsoleState => {
-      switch (action.type) {
-        case "INIT": {
-          return INIT_STATE;
-        }
-        case "ROLLING": {
-          const newState: ConsoleSelectState = {
-            state: "select",
-            dice: [
-              Math.floor(Math.random() * 6) + 1,
-              Math.floor(Math.random() * 6) + 1,
-              Math.floor(Math.random() * 6) + 1,
-              Math.floor(Math.random() * 6) + 1,
-            ],
-            selected: [false, false, false, false],
-          };
-
-          return newState;
-        }
-        case "UPDATE_SELECT": {
-          if (prevState.state !== "select") {
-            return prevState;
-          }
-
-          const newSelected = Array.from(prevState.selected);
-          newSelected[action.targetIndx] = action.newValue;
-
-          return {
-            ...prevState,
-            selected: newSelected,
-          };
-        }
-        case "APPLY": {
-          return {
-            state: "continue",
-            dice: [undefined, undefined, undefined, undefined],
-          };
-        }
-        case "CAMPING": {
-          return INIT_STATE;
-        }
+  prevState: __ConsoleState,
+  action: __ConsoleAction
+): __ConsoleState {
+  const newState: ConsoleState = ((): ConsoleState => {
+    switch (action.type) {
+      case "INIT": {
+        return INIT_STATE;
       }
+      case "ROLLING": {
+        const newDices = [
+          Math.floor(Math.random() * 6) + 1,
+          Math.floor(Math.random() * 6) + 1,
+          Math.floor(Math.random() * 6) + 1,
+          Math.floor(Math.random() * 6) + 1,
+        ];
 
-      return prevState;
-    })();
+        newDices.sort();
 
-    if (onStateChanged) {
-      onStateChanged({ newState, prevState, action });
+        const newState: ConsoleSelectState = {
+          state: "select",
+          dice: newDices,
+          selected: [false, false, false, false],
+        };
+
+        return newState;
+      }
+      case "UPDATE_SELECT": {
+        if (prevState.state !== "select") {
+          return prevState;
+        }
+
+        const newSelected = Array.from(prevState.selected);
+        newSelected[action.targetIndx] = action.newValue;
+
+        return {
+          ...prevState,
+          selected: newSelected,
+        };
+      }
+      case "APPLY": {
+        return {
+          state: "continue",
+          dice: [undefined, undefined, undefined, undefined],
+        };
+      }
+      case "CAMPING": {
+        return INIT_STATE;
+      }
     }
 
-    return newState;
+    return prevState;
+  })();
+
+  if (action.type === "___CHANGE_EVENT_HANDLER") {
+    return {
+      ...newState,
+      onStateChanged: action.newHandler,
+    };
+  }
+
+  if (prevState.onStateChanged) {
+    prevState.onStateChanged({ newState, prevState, action });
+  }
+
+  return {
+    ...newState,
+    onStateChanged: prevState.onStateChanged,
   };
 }
 
@@ -128,8 +152,18 @@ export default function useConsoleReducer(
   params?: useConsoleReducerParam
 ): [ConsoleState, Dispatch<ConsoleAction>] {
   const [consoleState, dispatch] = useReducer<
-    Reducer<ConsoleState, ConsoleAction>
-  >(consoleReducer(params?.onStateChanged), params?.defaultState || INIT_STATE);
+    Reducer<__ConsoleState, __ConsoleAction>
+  >(consoleReducer, {
+    ...(params?.defaultState || INIT_STATE),
+    onStateChanged: params?.onStateChanged,
+  });
+
+  useEffect(() => {
+    dispatch({
+      type: "___CHANGE_EVENT_HANDLER",
+      newHandler: params?.onStateChanged,
+    });
+  }, [params?.onStateChanged]);
 
   return [consoleState, dispatch];
 }
