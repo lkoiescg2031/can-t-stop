@@ -1,89 +1,131 @@
 "use client";
 
+import React, { MouseEventHandler } from "react";
+
 import classNames from "classnames";
-import React from "react";
+import styled from "styled-components";
+import tw from "twin.macro";
+
+import { produce } from "immer";
+
 import TrailNumber from "@/components/atoms/trail-number";
 import ToggleButton from "@/components/atoms/toggle-button";
 import Button from "@/components/atoms/button";
 import Dice from "@/components/atoms/dice";
-import styled from "styled-components";
-import tw from "twin.macro";
-import useConsoleReducer, {
-  ConsoleChangeHandler,
-  ConsoleState,
-} from "@/components/organisms/console/hooks/use-console-reducer";
+
+import { GameStage } from "@/models/game";
+import type { Dice as DiceType } from "@/models/dice";
+
+import { useGlobalStoreSelector } from "@/stores";
 
 export interface ConsoleProps {
   className?: string;
-  defaultState?: ConsoleState;
-  onConsoleUpdated?: ConsoleChangeHandler;
 }
 
 export default function Console(props: ConsoleProps): React.ReactElement {
-  const [console, dispatch] = useConsoleReducer({
-    defaultState: props.defaultState,
-    onStateChanged: props.onConsoleUpdated,
-  });
+  const stage = useGlobalStoreSelector.use.stage();
+  const dices = useGlobalStoreSelector.use.dices();
+  const trails = useGlobalStoreSelector.use.trails();
+
+  const rolling = useGlobalStoreSelector.use.rollDice();
+  const selectDiceGroup = useGlobalStoreSelector.use.selectDiceGroup();
+  const climbing = useGlobalStoreSelector.use.climbing();
+  const camping = useGlobalStoreSelector.use.camping();
+
+  const handleRolling: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    rolling();
+  };
+
+  const handleToggleGroup = (diceIndex: number) => (newValue: boolean) => {
+    selectDiceGroup(diceIndex, newValue ? 0 : 1);
+  };
+
+  const groupingDiceReducer = (
+    groupCounter: Record<string, number>,
+    dice: DiceType
+  ): Record<string, number> =>
+    produce(groupCounter, (counter) => {
+      const groupId =
+        typeof dice.selectedGroup === "undefined"
+          ? "unselected"
+          : "" + dice.selectedGroup;
+
+      if (!counter[groupId]) {
+        counter[groupId] = 1;
+      } else {
+        counter[groupId] += 1;
+      }
+    });
+
+  const isClimbable = (): boolean => {
+    const { unselected, ...groups } = dices.reduce(groupingDiceReducer, {
+      unselected: 0,
+    });
+
+    const targetValue = groups[0];
+
+    return (
+      unselected === 0 &&
+      Object.values(groups).every((count) => count === targetValue)
+    );
+  };
+
+  const handleClimbing: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    climbing();
+  };
+
+  const handleCamping: MouseEventHandler<HTMLButtonElement> = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    camping();
+  };
 
   return (
     <StyledConsoleDiv className={classNames("console", props.className)}>
       <div className={classNames("dice-console-area")}>
-        {console.state !== "select" &&
-          console.dice.map((diceNumber, index) => (
-            <Dice key={`dice-${index}`}>{diceNumber}</Dice>
+        {["TURN_START", "SELECT_TRAILS", "SELECT_PLAY"].includes(stage) &&
+          dices.map((dice, index) => (
+            <Dice key={`dice-${index}`}>{dice.pip}</Dice>
           ))}
 
-        {console.state === "select" && (
+        {stage === "UPDATE_DICE_GROUP" && (
           <>
             <div className={classNames("trail-view")}>
-              <TrailNumber>
-                {console.selected.reduce(
-                  (acc, selected, index) =>
-                    acc + (selected ? console.dice[index] : 0),
-                  0
-                )}
-              </TrailNumber>
-              <TrailNumber>
-                {console.selected.reduce(
-                  (acc, selected, index) =>
-                    acc + (selected ? 0 : console.dice[index]),
-                  0
-                )}
-              </TrailNumber>
+              {trails.map((trailNumber, index) => (
+                <TrailNumber key={`selected-trail-${index}`}>
+                  {trailNumber}
+                </TrailNumber>
+              ))}
             </div>
-            {console.dice.map((diceNumber, index) => (
+            {dices.map((dice, diceIndex) => (
               <ToggleButton
-                key={`toggle-dice-${index}`}
-                onToggleChanged={(newValue) =>
-                  dispatch({
-                    type: "UPDATE_SELECT",
-                    targetIndx: index,
-                    newValue,
-                  })
-                }
+                key={`dice-toggle-${diceIndex}`}
+                onToggleChanged={handleToggleGroup(diceIndex)}
               >
-                <Dice>{diceNumber}</Dice>
+                <Dice>{dice.pip}</Dice>
               </ToggleButton>
             ))}
           </>
         )}
       </div>
       <div className={classNames("submit-console-area")}>
-        {["init", "continue"].includes(console.state) && (
-          <Button onClick={() => dispatch({ type: "ROLLING" })}>Rolling</Button>
+        {(["TURN_START", "SELECT_PLAY"] as GameStage[]).includes(stage) && (
+          <Button onClick={handleRolling}>Rolling</Button>
         )}
-        {console.state === "select" && (
-          <Button
-            onClick={() => dispatch({ type: "APPLY" })}
-            disabled={
-              console.selected.filter((selected) => selected).length !== 2
-            }
-          >
+        {(["UPDATE_DICE_GROUP"] as GameStage[]).includes(stage) && (
+          <Button onClick={handleClimbing} disabled={!isClimbable()}>
             Climbing
           </Button>
         )}
-        {console.state === "continue" && (
-          <Button onClick={() => dispatch({ type: "CAMPING" })}>Camping</Button>
+        {(["SELECT_PLAY"] as GameStage[]).includes(stage) && (
+          <Button onClick={handleCamping}>Camping</Button>
         )}
       </div>
     </StyledConsoleDiv>

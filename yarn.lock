@@ -5767,6 +5767,7 @@ __metadata:
     eslint: "npm:^8"
     eslint-config-next: "npm:14.0.3"
     eslint-plugin-storybook: "npm:^0.6.15"
+    immer: "npm:^10.0.3"
     next: "npm:14.0.3"
     postcss: "npm:^8"
     react: "npm:^18"
@@ -8666,6 +8667,13 @@ __metadata:
   bin:
     image-size: bin/image-size.js
   checksum: df518606c75d0ee12a6d7e822a64ef50d9eabbb303dcee8c9df06bad94e49b4d4680b9003968203f239ff39a9cc51d4ff1781cd331cc0a4b3b858d9fc9836c68
+  languageName: node
+  linkType: hard
+
+"immer@npm:^10.0.3":
+  version: 10.0.3
+  resolution: "immer@npm:10.0.3"
+  checksum: 282a4f8479a40f7d12b2b3243c095e3e892bf99058e2ffcdd6b8e9fd143e6a90f2717ab9b6c8b97c927ffb8054465c8f647056f41660dbfd672e240cf1063503
   languageName: node
   linkType: hard
 

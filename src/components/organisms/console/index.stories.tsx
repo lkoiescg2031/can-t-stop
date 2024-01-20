@@ -17,28 +17,19 @@ type Story = StoryObj<typeof meta>;
 export const InitialState: Story = {
   args: {
     className: undefined,
-    onConsoleUpdated: undefined,
-    defaultState: undefined,
   },
 };
 
+// FIXME 스토리북 수정
 export const SelectState: Story = {
   args: {
     ...InitialState.args,
-    defaultState: {
-      state: "select",
-      dice: [4, 5, 6, 2],
-      selected: [false, true, false, false],
-    },
   },
 };
 
+// FIXME 스토리북 수정
 export const ContinueState: Story = {
   args: {
     ...InitialState.args,
-    defaultState: {
-      state: "continue",
-      dice: [undefined, undefined, undefined, undefined],
-    },
   },
 };

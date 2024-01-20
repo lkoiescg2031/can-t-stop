@@ -16,7 +16,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     turn: 2,
-    scores: { 1: 2, 2: 2, 3: 1, 4: 0 },
+    scores: { 1: [], 2: [], 3: [], 4: [] },
     children: "기본 메세지입니다.",
   },
 };

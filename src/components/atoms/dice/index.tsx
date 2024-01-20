@@ -39,7 +39,7 @@ export default function Dice(props: DiceProps): React.ReactElement {
     return () => {
       clearInterval(intervalId);
     };
-  }, [props.children, setSelectedPip]);
+  }, [props.children, selectedPip, setSelectedPip]);
 
   return (
     <StyledDiceDiv className={classNames("dice", props.className)}>
